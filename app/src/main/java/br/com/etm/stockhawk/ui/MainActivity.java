@@ -27,7 +27,7 @@ import br.com.etm.stockhawk.data.PrefUtils;
 import br.com.etm.stockhawk.sync.QuoteSyncJob;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
+
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onClick(String symbol) {
-//        Timber.d("Symbol clicked: %s", symbol);
 
         Uri uriSymbol = Contract.Quote.makeUriForStock(symbol);
 
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         QuoteSyncJob.initialize(this);
         getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
-
 
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     void addStock(String symbol) {
-        if (symbol != null && !symbol.isEmpty()) {
+        if (symbol != null && !symbol.isEmpty() && !symbol.trim().isEmpty()) {
             if (networkUp()) {
                 swipeRefreshLayout.setRefreshing(true);
             } else {
@@ -135,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             PrefUtils.addStock(this, symbol);
             QuoteSyncJob.syncImmediately(this);
+        } else {
+            Toast.makeText(this, getString(R.string.toast_invalid_symbol), Toast.LENGTH_SHORT).show();
         }
     }
 

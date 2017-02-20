@@ -31,6 +31,7 @@
     <string name="toast_stock_not_found_symbol">Symbol %s was not found.</string>
     <string name="toast_stock_added_no_connectivity">Symbol %s added. Will refresh when network available.</string>
     <string name="toast_no_connectivity">Will refresh when network available. The data may be outdated.</string>
+    <string name="toast_invalid_symbol">Fill in a valid symbol</string>
 
     <!-- Content description to provide accessibility-->
     <string name="content_description_add_stock">Add a new stock</string>

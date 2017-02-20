@@ -45,8 +45,6 @@ public final class QuoteSyncJob {
 
     static void getQuotes(final Context context) {
 
-//        Timber.d("Running sync job");
-
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
         from.add(Calendar.YEAR, -YEARS_OF_HISTORY);
@@ -58,29 +56,21 @@ public final class QuoteSyncJob {
             stockCopy.addAll(stockPref);
             String[] stockArray = stockPref.toArray(new String[stockPref.size()]);
 
-//            Timber.d(stockCopy.toString());
-
             if (stockArray.length == 0) {
                 return;
             }
             Map<String, Stock> quotes = YahooFinance.get(stockArray);
             Iterator<String> iterator = stockCopy.iterator();
 
-//            Timber.d(quotes.toString());
-
-
-
             ArrayList<ContentValues> quoteCVs = new ArrayList<>();
 
             while (iterator.hasNext()) {
                 final String symbol = iterator.next();
-
-                Stock stock = quotes.get(symbol);
-                StockQuote quote = stock.getQuote();
-
-                String name = stock.getName();
-
                 try {
+                    Stock stock = quotes.get(symbol);
+                    StockQuote quote = stock.getQuote();
+
+                    String name = stock.getName();
 
                     float price = quote.getPrice().floatValue();
                     float change = quote.getChange().floatValue();
@@ -110,10 +100,8 @@ public final class QuoteSyncJob {
                     quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
 
                     quoteCVs.add(quoteCV);
-                }catch (NullPointerException e){
-
+                } catch (NullPointerException e) {
                     PrefUtils.removeStock(context, symbol);
-
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
@@ -138,8 +126,6 @@ public final class QuoteSyncJob {
     }
 
     private static void schedulePeriodic(Context context) {
-//        Timber.d("Scheduling a periodic task");
-
 
         JobInfo.Builder builder = new JobInfo.Builder(PERIODIC_ID, new ComponentName(context, QuoteJobService.class));
 
